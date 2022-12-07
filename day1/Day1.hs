@@ -31,9 +31,7 @@ main = do
     content <- readLines "/home/aktersnurra/projects/advent-of-code-2022/day1/input"
     let caloriesPerItem = map readMaybeInt content
     let totalCaloriesPerElf = sumCaloriesPerElf 0 caloriesPerItem
-    print totalCaloriesPerElf
     let maxTotalCalories = maximum $ totalCaloriesPerElf
+    let topThree = sumTopThree $ topThreeByTotalCalories 0 0 0 totalCaloriesPerElf
     print maxTotalCalories
-    print $ topThreeByTotalCalories 0 0 0 totalCaloriesPerElf
-    let x = sumTopThree $ topThreeByTotalCalories 0 0 0 totalCaloriesPerElf
-    print x
+    print topThree
