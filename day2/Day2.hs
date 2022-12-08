@@ -10,12 +10,6 @@ readLines = fmap lines . readFile
 data Shape = Rock | Paper | Scissor deriving (Eq, Show, Enum, Bounded)
 data Outcome = Win | Loss | Draw deriving (Eq, Show, Enum, Bounded)
 
-win :: Shape -> Shape
-win x = case x of
-  Rock -> Paper
-  Paper -> Scissor
-  Scissor -> Rock
-
 outcomeScore :: Outcome -> Int
 outcomeScore x = case x of
   Win -> 6
