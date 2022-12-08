@@ -1,0 +1,4 @@
+cradle:
+  cabal:
+    - path: "day1/Day1.hs"
+      component: "advent-of-code2022:exe:day1"
