@@ -37,3 +37,10 @@ executable day2
     build-depends:    split ^>=0.2.3
     main-is:          Day2.hs
     hs-source-dirs:   day2
+
+executable day3
+    import:           common-all
+    build-depends:    unordered-containers ^>=0.2.19.1,
+                      containers ^>=0.6.6
+    main-is:          Day3.hs
+    hs-source-dirs:   day3
