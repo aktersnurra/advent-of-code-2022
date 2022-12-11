@@ -44,3 +44,11 @@ executable day3
                       containers ^>=0.6.6
     main-is:          Day3.hs
     hs-source-dirs:   day3
+
+executable day4
+    import:           common-all
+    build-depends:    split ^>=0.2.3,
+                      unordered-containers ^>=0.2.19.1,
+                      containers ^>=0.6.6
+    main-is:          Day4.hs
+    hs-source-dirs:   day4
