@@ -12,7 +12,6 @@ splitOnHyphen x = map (\x -> read x :: Int) (splitOn "-" x)
 toRange :: [Int] -> [Int]
 toRange [x, y] = [x .. y]
 
--- shortest of the ranges equal intersect
 minOfRanges :: Set.Set Int -> Set.Set Int -> Int
 minOfRanges x y = min (length x) (length y)
 
