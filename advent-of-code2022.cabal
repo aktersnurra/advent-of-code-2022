@@ -60,3 +60,11 @@ executable day5
                       unordered-containers ^>=0.2.19.1,
                       containers ^>=0.6.6
     hs-source-dirs:   day5
+
+executable day6
+    import:           common-all
+    build-depends:    split ^>=0.2.3,
+                      unordered-containers ^>=0.2.19.1,
+                      containers ^>=0.6.6
+    main-is:          Day6.hs
+    hs-source-dirs:   day6
