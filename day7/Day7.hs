@@ -1,72 +1,34 @@
 module Main where
 
+import Data.List
 import Data.List.Split
-import Text.Read (readMaybe)
-
-readMaybeInt :: String -> Maybe Int
-readMaybeInt x = readMaybe x
-
--- parse :: String ->
-
-data File = File {size :: Int, name :: String} deriving (Show)
-
-data Dir = Dir {parent :: Maybe Dir, dir :: String, files :: [File], dirs :: [Dir]} deriving (Show)
-
-splitOnSpace = splitOn " "
-
-addFiles :: Dir -> [File] -> Dir
-addFile x y = x{files = ((files x) ++ y)}
-
-addDirs :: Dir -> [Dir] -> Dir
-addDir x y = x{dirs = ((dirs x) ++ y)}
-
-createDir :: Maybe Dir -> String -> Dir
-createDir x y = Dir{parent = x, dir = y, files = [], dirs = []}
-
-createDirs :: Maybe Dir -> [String] -> [Dir]
-createDirs parent xs =
-  map (\x -> createDir parent x) $
-    map (\x -> last $ splitOnSpace x) $
-      filter (\x -> (take 3 x) == "dir") $
-        takeWhile (\x -> (head x) /= '$') xs
-
-createFile :: String -> String -> File
-createFile x y = File{size = read x :: Int, name = y}
-
-createFiles :: [String] -> [File]
-createFiles xs =
-  map (\[x, y] -> createFile x y) $
-    map (\x -> splitOnSpace x) $
-      filter (\x -> (take 3 x) /= "dir") xs
+import qualified Data.Map as Map
 
 readLines :: FilePath -> IO [String]
 readLines = fmap lines . readFile
 
--- parseFiles
+data Content = File {size :: Int, fname :: String} | Dir {dir :: String, files :: [Content]} deriving (Show)
 
--- parseDirs :: [String] -> [Dir]
--- parseDirs
-
--- tree :: Dir -> [String] -> ([Dir], [String])
--- tree (x:xs)
---   | isPrefixOf ""
-
--- parse :: [String] -> [Dir]
--- parse (x:xs)
---   | isPrefixOf x "$ cd" =
---   | isPrefixOf x "$ ls"  = takeWhile changeDir xs
---   | otherwise = []
+createFileSystem :: [String] -> Content -> ([String], Content)
+createFileSystem [] fs = ([], fs)
+createFileSystem (x : xs) (Dir dir files)
+  | x == "$ cd .." = (xs, (Dir dir files))
+  | x == "$ ls" = createFileSystem xs (Dir dir files)
+  | isPrefixOf "$ cd" x = createFileSystem xss (Dir dir (sfs : files))
+  | isPrefixOf "dir" x = createFileSystem xs (Dir dir files)
+  | otherwise = createFileSystem xs (Dir dir (file : files))
+ where
+  [size, fname] = words x
+  file = File (read size) fname
+  dname = last $ words x
+  (xss, sfs) = createFileSystem xs (Dir dname [])
 
 main :: IO ()
 main = do
   content <- readLines "/home/aktersnurra/projects/advent-of-code-2022/day7/input"
-  let f = splitOn " "
-  let x = take 13 content
-  let y = drop 2 x
-  -- let z = map (\x -> last $ f x) $ filter (\x -> isPrefixOf x "dir") $ takeWhile (\x -> (head x) /= '$') y
-  let root = Just Dir{parent = Nothing, dir = "/", files = [], dirs = []}
-  let z = createDirs root y
-  let xx = take 4 $ drop 15 content
-  let yy = createFiles xx
-  print yy
-  print xx
+  let dir = last $ words $ head content
+  let root = Dir{dir=dir, files=[]}
+  let cmds = drop 1 content
+  print cmds
+  let (yy,xx) = createFileSystem cmds root
+  print xx 
