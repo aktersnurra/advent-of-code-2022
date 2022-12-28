@@ -1,8 +1,6 @@
 module Main where
 
 import Data.List
-import Data.List.Split
-import qualified Data.Map as Map
 
 readLines :: FilePath -> IO [String]
 readLines = fmap lines . readFile
@@ -23,12 +21,24 @@ createFileSystem (x : xs) (Dir dir files)
   dname = last $ words x
   (xss, sfs) = createFileSystem xs (Dir dname [])
 
+calculateDirSize :: Content -> Int
+calculateDirSize (File size _) = size
+calculateDirSize (Dir _ files) = sum . map calculateDirSize $ files
+
+calculateDirSizes :: Content -> [Int]
+calculateDirSizes (File _ _) = []
+calculateDirSizes (Dir dir files) = calculateDirSize (Dir dir files) : foldl (\x y -> x ++ calculateDirSizes y) [] files
+
 main :: IO ()
 main = do
   content <- readLines "/home/aktersnurra/projects/advent-of-code-2022/day7/input"
   let dir = last $ words $ head content
-  let root = Dir{dir=dir, files=[]}
+  let root = Dir{dir = dir, files = []}
   let cmds = drop 1 content
-  print cmds
-  let (yy,xx) = createFileSystem cmds root
-  print xx 
+  let (_, fs) = createFileSystem cmds root
+  let dirSizes = calculateDirSizes fs
+  let answer1 = sum . filter (< 100000) $ dirSizes
+  print answer1
+  let spaceNeeded = 30000000 - (70000000 - maximum dirSizes)
+  let answer2 = minimum . filter (> spaceNeeded) $ dirSizes
+  print answer2
