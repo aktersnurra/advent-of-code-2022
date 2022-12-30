@@ -76,3 +76,11 @@ executable day7
                       containers ^>=0.6.6
     main-is:          Day7.hs
     hs-source-dirs:   day7
+
+executable day8
+    import:           common-all
+    build-depends:    split ^>=0.2.3,
+                      unordered-containers ^>=0.2.19.1,
+                      containers ^>=0.6.6
+    main-is:          Day8.hs
+    hs-source-dirs:   day8
